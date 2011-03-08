@@ -14,27 +14,36 @@ class confirm extends Action
 		$secret = $_GET['secret'];
 		if(isset($email))
 		{
-			$sql="select * from users where email='$email' and secret='$secret'";
-			$sel = mysql_query($sql);
-			if($sel)
+			$users_info = $db->fetch('users', 'id', $id);
+			if($users_info['group'] == 1)
 			{
-				$sql=$db->update('users', $id, array('group' => 1));
-				if($sql)
+				
+				header('Location:/cybery-reader/login/?group=1');
+			}
+			else
+			{
+				$sql="select * from users where email='$email' and secret='$secret'";
+				$sel = mysql_query($sql);
+				if($sel)
 				{
-					header('Location:/cybery-reader/regist/step2/');		
+					$sql=$db->update('users', $id, array('group' => 1));
+					if($sql)
+					{
+						header('Location:/cybery-reader/regist/step2/');			
+					}
+					else
+					{
+						$data['ismsg'] = TRUE;
+						$data['msg'] = '邮箱认证失败';
+					}
 				}
 				else
 				{
 					$data['ismsg'] = TRUE;
-					$data['msg'] = '邮箱认证失败';
+					$data['msg'] = '好像出错了';
 				}
 			}
-			else
-			{
-				$data['ismsg'] = TRUE;
-				$data['msg'] = '好想出错了';
 			}
-		}
 		else
 		{
 			$data['ismsg'] = TRUE;

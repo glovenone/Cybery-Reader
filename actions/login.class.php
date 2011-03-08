@@ -6,8 +6,16 @@ class Login extends Action
     {
         global $db, $tpl;
         $data['ismsg'] = FALSE;
-		$data['msg'] = NULL;
-		
+	$data['msg'] = NULL;
+	
+	if(is_array($_GET)&&count($_GET)>0)
+	{
+		if($_GET['group'])
+		{
+			$data['ismsg'] = TRUE;
+			$data['msg'] = '您的账户已经激活,请直接登录或重新注册.';
+		}
+	}
         if (isset($_SESSION['user']) && isset($_SESSION['user']['group']) && $_SESSION['user']['group'] != 0)
         {
 		    header('location:../home/');
